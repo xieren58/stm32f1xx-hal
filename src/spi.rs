@@ -213,7 +213,33 @@ impl<REMAP, PINS> Spi<SPI2, REMAP, PINS, u8> {
     }
 }
 
-#[cfg(any(feature = "high", feature = "connectivity"))]
+#[cfg(any(feature = "high"))]
+impl<REMAP, PINS> Spi<SPI3, REMAP, PINS, u8> {
+    /**
+      Constructs an SPI instance using SPI2 in 8bit dataframe mode.
+
+      The pin parameter tuple (sck, miso, mosi) should be `(PB13, PB14, PB15)` configured as `(Alternate<PushPull>, Input<Floating>, Alternate<PushPull>)`.
+
+      You can also use `NoSck`, `NoMiso` or `NoMosi` if you don't want to use the pins
+    */
+    pub fn spi3<F, POS>(
+        spi: SPI3,
+        pins: PINS,
+        mode: Mode,
+        freq: F,
+        clocks: Clocks,
+        apb: &mut APB1,
+    ) -> Self
+    where
+        F: Into<Hertz>,
+        REMAP: Remap<Periph = SPI3>,
+        PINS: Pins<REMAP, POS>,
+    {
+        Spi::<SPI3, _, _, u8>::_spi(spi, pins, mode, freq.into(), clocks, apb)
+    }
+}
+
+#[cfg(any(feature = "connectivity"))]
 impl<REMAP, PINS> Spi<SPI3, REMAP, PINS, u8> {
     /**
       Constructs an SPI instance using SPI3 in 8bit dataframe mode.
